@@ -210,10 +210,18 @@ export default function Navbar({ onOpenEnquire, onOpenAudit }) {
             </div>
 
             <Link
-              to="/services"
+              to="/about"
               className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors"
             >
-              All Services
+              About
+            </Link>
+
+            <Link
+              to="/roi-calculator"
+              className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors flex items-center gap-1"
+            >
+              <span>ROI Calc</span>
+              <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-blue-100 text-blue-700 font-bold">New</span>
             </Link>
 
             <a
@@ -230,35 +238,37 @@ export default function Navbar({ onOpenEnquire, onOpenAudit }) {
               Our Work
             </a>
 
-            <a
-              href="/#testimonials"
+            <Link
+              to="/contact"
               className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors"
             >
-              Testimonials
-            </a>
-
-            <a
-              href="/#faq"
-              className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors"
-            >
-              FAQ
-            </a>
+              Contact
+            </Link>
           </div>
 
           {/* Action CTAs */}
-          <div className="hidden lg:flex items-center gap-4">
-            <button
-              onClick={() => onOpenEnquire()}
-              className="text-sm font-semibold text-slate-700 hover:text-blue-600 px-3 py-2 transition-colors"
+          <div className="hidden lg:flex items-center gap-3">
+            <Link
+              to="/portal"
+              className="text-xs font-semibold text-slate-600 hover:text-blue-600 px-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors flex items-center gap-1"
             >
-              Enquire Now
-            </button>
+              <span>Client Portal</span>
+              <ArrowUpRight className="w-3 h-3 text-slate-400" />
+            </Link>
+
+            <Link
+              to="/admin"
+              className="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors"
+            >
+              Admin
+            </Link>
+
             <button
               onClick={onOpenAudit}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-600/35 transition-all transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-semibold text-xs px-4 py-2 rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-600/35 transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5"
             >
               <span>Get Free Audit</span>
-              <ArrowUpRight className="w-4 h-4" />
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
@@ -298,12 +308,53 @@ export default function Navbar({ onOpenEnquire, onOpenAudit }) {
             </Link>
 
             <Link
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-semibold text-slate-900 hover:text-blue-600 block py-1"
+            >
+              About Us
+            </Link>
+
+            <Link
               to="/services"
               onClick={() => setMobileMenuOpen(false)}
               className="text-base font-semibold text-blue-600 block py-1"
             >
               Explore All Services Directory →
             </Link>
+
+            <Link
+              to="/roi-calculator"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-semibold text-slate-900 hover:text-blue-600 block py-1"
+            >
+              Growth & ROI Calculator
+            </Link>
+
+            <Link
+              to="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-semibold text-slate-900 hover:text-blue-600 block py-1"
+            >
+              Contact Us & Noida Office
+            </Link>
+
+            <div className="grid grid-cols-2 gap-2 py-2">
+              <Link
+                to="/portal"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2 rounded-xl bg-blue-50 text-blue-700 font-bold text-xs border border-blue-200"
+              >
+                Client Portal
+              </Link>
+              <Link
+                to="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-center py-2 rounded-xl bg-slate-900 text-white font-bold text-xs"
+              >
+                Admin Suite
+              </Link>
+            </div>
 
             {/* Mobile Services Accordion Preview */}
             <div className="space-y-3 pt-2">

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, Shield, Send, CheckCircle2, Clock } from 'lucide-react';
+import { Sparkles, Shield, Send, CheckCircle2, Clock, MessageSquare } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export default function AuditCTASection() {
+  const { addLead } = useApp();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -13,6 +15,15 @@ export default function AuditCTASection() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addLead({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      website: formData.website,
+      service: formData.service,
+      source: 'Audit CTA Section (Homepage)',
+      message: `Audit requested for domain: ${formData.website} with focus on ${formData.service}`
+    });
     setSubmitted(true);
   };
 
@@ -84,12 +95,23 @@ export default function AuditCTASection() {
                   <p className="text-sm text-slate-600 max-w-md mx-auto">
                     Thank you! Our technical audit team is reviewing your digital footprint. We will email your custom report within 24 hours.
                   </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="mt-4 px-6 py-2 rounded-full border border-slate-300 text-xs text-slate-700 hover:bg-slate-50"
-                  >
-                    Submit Another Request
-                  </button>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                    <button
+                      onClick={() => setSubmitted(false)}
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-full border border-slate-300 text-xs text-slate-700 hover:bg-slate-50"
+                    >
+                      Submit Another Request
+                    </button>
+                    <a
+                      href={`https://wa.me/917071501382?text=Hi%20Dev%20Digit%20Solutions%2C%20I%20just%20requested%20an%20audit%20for%20${encodeURIComponent(formData.website)}.%20Name:%20${encodeURIComponent(formData.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Instant WhatsApp Status</span>
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">

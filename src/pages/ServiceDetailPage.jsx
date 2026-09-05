@@ -13,10 +13,13 @@ import {
   TrendingUp,
   Award,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  MessageSquare
 } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 export default function ServiceDetailPage({ onOpenEnquire, onOpenAudit }) {
+  const { addLead } = useApp();
   const { slug } = useParams();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -64,6 +67,15 @@ export default function ServiceDetailPage({ onOpenEnquire, onOpenAudit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addLead({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      website: formData.website,
+      service: service.title,
+      source: `Service Detail: ${service.title}`,
+      message: formData.notes || `Inquiry for ${service.title}`
+    });
     setSubmitted(true);
   };
 
@@ -295,12 +307,23 @@ export default function ServiceDetailPage({ onOpenEnquire, onOpenAudit }) {
                 <p className="text-sm text-slate-600 max-w-md mx-auto">
                   Thank you! Our dedicated practice lead for {service.title} will contact you within 2-4 hours with a custom proposal.
                 </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="mt-4 px-6 py-2 rounded-full border border-slate-300 text-xs text-slate-700 hover:bg-slate-50"
-                >
-                  Submit Another Inquiry
-                </button>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full border border-slate-300 text-xs text-slate-700 hover:bg-slate-50"
+                  >
+                    Submit Another Inquiry
+                  </button>
+                  <a
+                    href={`https://wa.me/917071501382?text=Hi%20Dev%20Digit%20Solutions%2C%20I%20just%20submitted%20an%20inquiry%20for%20${encodeURIComponent(service.title)}.%20Name:%20${encodeURIComponent(formData.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Chat on WhatsApp Directly</span>
+                  </a>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">

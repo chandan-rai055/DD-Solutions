@@ -349,6 +349,11 @@ export default function Footer({ onOpenEnquire, onOpenAudit }) {
               {openSections.agency && (
                 <div className="px-4 pb-4 pt-1 border-t border-slate-800/60 animate-in fade-in duration-200">
                   <ul className="space-y-1.5 text-xs text-slate-400">
+                    <li><Link to="/about" className="hover:text-white transition-colors block py-0.5 text-blue-300">About Dev Digit Solutions (10+ Yrs)</Link></li>
+                    <li><Link to="/contact" className="hover:text-white transition-colors block py-0.5">Contact Us & Noida HQ Office</Link></li>
+                    <li><Link to="/roi-calculator" className="hover:text-white transition-colors block py-0.5 text-emerald-400 font-semibold">Growth & ROAS Calculator</Link></li>
+                    <li><Link to="/portal" className="hover:text-white transition-colors block py-0.5 font-bold text-blue-400">Client Project Portal Login →</Link></li>
+                    <li><Link to="/admin" className="hover:text-white transition-colors block py-0.5 font-bold text-slate-300">Internal Admin & Team Suite →</Link></li>
                     <li><a href="/#marcom" className="hover:text-white transition-colors block py-0.5">Why Dev Digit Solutions</a></li>
                     <li><a href="/#portfolio" className="hover:text-white transition-colors block py-0.5">Featured Work & Case Studies</a></li>
                     <li><a href="/#case-studies" className="hover:text-white transition-colors block py-0.5">Verified Client Analytics Results</a></li>

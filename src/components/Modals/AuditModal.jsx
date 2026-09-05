@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, Sparkles, Shield, Clock } from 'lucide-react';
+import { X, Send, CheckCircle2, Sparkles, Shield, Clock, MessageSquare } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export default function AuditModal({ isOpen, onClose }) {
+  const { addLead } = useApp();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -14,6 +16,15 @@ export default function AuditModal({ isOpen, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addLead({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      website: formData.website,
+      service: 'Search Engine Optimization & Growth Audit',
+      source: 'Free Website Audit Modal',
+      message: `Audit requested for domain: ${formData.website}`
+    });
     setSubmitted(true);
   };
 
@@ -46,12 +57,23 @@ export default function AuditModal({ isOpen, onClose }) {
             <p className="text-sm text-slate-600">
               Dev Digit Solutions strategists are preparing your comprehensive report. We will email it to {formData.email} within 24 hours.
             </p>
-            <button
-              onClick={handleClose}
-              className="mt-4 px-6 py-2.5 rounded-full bg-blue-600 text-white font-heading font-bold text-xs hover:bg-blue-700"
-            >
-              Close
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+              <button
+                onClick={handleClose}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-slate-100 text-slate-700 font-heading font-bold text-xs hover:bg-slate-200"
+              >
+                Close
+              </button>
+              <a
+                href={`https://wa.me/917071501382?text=Hi%20Dev%20Digit%20Solutions%2C%20I%20just%20queued%20a%20free%20audit%20for%20my%20website%20${encodeURIComponent(formData.website)}.%20Name:%20${encodeURIComponent(formData.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Get Instant WhatsApp Status</span>
+              </a>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

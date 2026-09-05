@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2 } from 'lucide-react';
+import { X, Send, CheckCircle2, MessageSquare } from 'lucide-react';
 import { siteData } from '../../data/siteData';
+import { useApp } from '../../context/AppContext';
 
 export default function EnquireModal({ isOpen, onClose, preselectedService = '' }) {
+  const { addLead } = useApp();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -16,6 +18,14 @@ export default function EnquireModal({ isOpen, onClose, preselectedService = '' 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    addLead({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      service: formData.service,
+      source: 'Enquire Modal',
+      message: formData.message
+    });
     setSubmitted(true);
   };
 
@@ -48,12 +58,23 @@ export default function EnquireModal({ isOpen, onClose, preselectedService = '' 
             <p className="text-sm text-slate-600">
               A Dev Digit Solutions partner will connect with you within 2-4 business hours to discuss your project.
             </p>
-            <button
-              onClick={handleClose}
-              className="mt-4 px-6 py-2.5 rounded-full bg-blue-600 text-white font-heading font-bold text-xs hover:bg-blue-700"
-            >
-              Done
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+              <button
+                onClick={handleClose}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-slate-100 text-slate-700 font-heading font-bold text-xs hover:bg-slate-200"
+              >
+                Close
+              </button>
+              <a
+                href={`https://wa.me/917071501382?text=Hi%20Dev%20Digit%20Solutions%2C%20I%20just%20submitted%20an%20enquiry%20for%20${encodeURIComponent(formData.service)}.%20Name:%20${encodeURIComponent(formData.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Chat on WhatsApp Now</span>
+              </a>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
