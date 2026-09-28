@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminLayout() {
+  const {
     currentRole,
     setCurrentRole,
     leads,
