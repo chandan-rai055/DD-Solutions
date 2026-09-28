@@ -9,6 +9,7 @@ const initialSeedData = {
   // Roles: 'admin', 'developer', 'designer', 'hr', 'client'
   currentRole: 'admin',
   currentClientId: 'vitamuch',
+  isAuthenticated: false,
   
   toast: null, // { message, type: 'success' | 'info' | 'warning' }
 
@@ -611,6 +612,25 @@ export function AppProvider({ children }) {
     showToast(`Switched active view to: ${role.toUpperCase()}`, 'info');
   };
 
+  // Auth Methods
+  const login = (username, password) => {
+    // Mock login logic: password is the same as the username.
+    const validUsers = ['admin', 'developer', 'designer', 'hr', 'client'];
+    if (validUsers.includes(username) && password === username) {
+      setState((prev) => ({
+        ...prev,
+        isAuthenticated: true,
+        currentRole: username === 'client' ? 'client' : username
+      }));
+      return true;
+    }
+    return false;
+  };
+
+  const logout = () => {
+    setState((prev) => ({ ...prev, isAuthenticated: false, currentRole: 'admin' }));
+  };
+
   // Client Switcher for Client Portal
   const setCurrentClientId = (clientId) => {
     setState((prev) => ({ ...prev, currentClientId: clientId }));
@@ -1119,6 +1139,9 @@ export function AppProvider({ children }) {
     <AppContext.Provider
       value={{
         state,
+        isAuthenticated: state.isAuthenticated,
+        login,
+        logout,
         currentRole: state.currentRole,
         setCurrentRole,
         currentClientId: state.currentClientId,

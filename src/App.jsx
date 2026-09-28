@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AppProvider } from './context/AppContext';
+import React, { useState, Suspense } from 'react';
+import { Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
+import { AppProvider, useApp } from './context/AppContext';
 
 // Public Components
 import Navbar from './components/Navbar';
@@ -9,24 +9,40 @@ import FloatingWhatsApp from './components/FloatingWhatsApp';
 import EnquireModal from './components/Modals/EnquireModal';
 import AuditModal from './components/Modals/AuditModal';
 
-// Public Pages
-import HomePage from './pages/HomePage';
-import ServicesHubPage from './pages/ServicesHubPage';
-import ServiceDetailPage from './pages/ServiceDetailPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import RoiCalculatorPage from './pages/RoiCalculatorPage';
+// Protected Route Wrapper
+const ProtectedRoute = () => {
+  const { isAuthenticated } = useApp();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return <Outlet />;
+};
 
-// Portal & Admin Pages
-import ClientPortalPage from './pages/portal/ClientPortalPage';
-import AdminLayout from './pages/admin/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminLeadsPage from './pages/admin/AdminLeadsPage';
-import AdminProjectsPage from './pages/admin/AdminProjectsPage';
-import AdminTicketsPage from './pages/admin/AdminTicketsPage';
-import AdminFinancePage from './pages/admin/AdminFinancePage';
-import AdminTeamPage from './pages/admin/AdminTeamPage';
-import AdminWhatsAppPage from './pages/admin/AdminWhatsAppPage';
+// Lazy Loaded Pages
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const ServicesHubPage = React.lazy(() => import('./pages/ServicesHubPage'));
+const ServiceDetailPage = React.lazy(() => import('./pages/ServiceDetailPage'));
+const AboutPage = React.lazy(() => import('./pages/AboutPage'));
+const ContactPage = React.lazy(() => import('./pages/ContactPage'));
+const RoiCalculatorPage = React.lazy(() => import('./pages/RoiCalculatorPage'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+
+// Lazy Loaded Portal & Admin Pages
+const ClientPortalPage = React.lazy(() => import('./pages/portal/ClientPortalPage'));
+const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
+const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminLeadsPage = React.lazy(() => import('./pages/admin/AdminLeadsPage'));
+const AdminProjectsPage = React.lazy(() => import('./pages/admin/AdminProjectsPage'));
+const AdminTicketsPage = React.lazy(() => import('./pages/admin/AdminTicketsPage'));
+const AdminFinancePage = React.lazy(() => import('./pages/admin/AdminFinancePage'));
+const AdminTeamPage = React.lazy(() => import('./pages/admin/AdminTeamPage'));
+const AdminWhatsAppPage = React.lazy(() => import('./pages/admin/AdminWhatsAppPage'));
+
+const LoaderFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
 export default function App() {
   const [enquireOpen, setEnquireOpen] = useState(false);
@@ -39,9 +55,11 @@ export default function App() {
     setEnquireOpen(true);
   };
 
-  // Determine if the current route is a dedicated workspace (Admin or Client Portal)
+  // Determine if the current route is a dedicated workspace (Admin, Client Portal, Login)
   const isWorkspaceRoute =
-    location.pathname.startsWith('/admin') || location.pathname.startsWith('/portal');
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/portal') ||
+    location.pathname.startsWith('/login');
 
   return (
     <AppProvider>
@@ -57,77 +75,83 @@ export default function App() {
 
         {/* Main Content Area */}
         <main className="flex-grow">
-          <Routes>
-            {/* Public Website Routes */}
-            <Route
-              path="/"
-              element={
-                <HomePage
-                  onOpenEnquire={(svc) => handleOpenEnquire(svc)}
-                  onOpenAudit={() => setAuditOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <AboutPage
-                  onOpenEnquire={() => handleOpenEnquire()}
-                  onOpenAudit={() => setAuditOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/contact"
-              element={<ContactPage />}
-            />
-            <Route
-              path="/roi-calculator"
-              element={<RoiCalculatorPage />}
-            />
-            <Route
-              path="/services"
-              element={
-                <ServicesHubPage
-                  onOpenAudit={() => setAuditOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/services/:slug"
-              element={
-                <ServiceDetailPage
-                  onOpenEnquire={(svc) => handleOpenEnquire(svc)}
-                  onOpenAudit={() => setAuditOpen(true)}
-                />
-              }
-            />
+          <Suspense fallback={<LoaderFallback />}>
+            <Routes>
+              {/* Public Website Routes */}
+              <Route
+                path="/"
+                element={
+                  <HomePage
+                    onOpenEnquire={(svc) => handleOpenEnquire(svc)}
+                    onOpenAudit={() => setAuditOpen(true)}
+                  />
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <AboutPage
+                    onOpenEnquire={() => handleOpenEnquire()}
+                    onOpenAudit={() => setAuditOpen(true)}
+                  />
+                }
+              />
+              <Route
+                path="/contact"
+                element={<ContactPage />}
+              />
+              <Route
+                path="/roi-calculator"
+                element={<RoiCalculatorPage />}
+              />
+              <Route
+                path="/services"
+                element={
+                  <ServicesHubPage
+                    onOpenAudit={() => setAuditOpen(true)}
+                  />
+                }
+              />
+              <Route
+                path="/services/:slug"
+                element={
+                  <ServiceDetailPage
+                    onOpenEnquire={(svc) => handleOpenEnquire(svc)}
+                    onOpenAudit={() => setAuditOpen(true)}
+                  />
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Client Portal Route */}
-            <Route path="/portal" element={<ClientPortalPage />} />
+              {/* Protected Routes */}
+              <Route element={<ProtectedRoute />}>
+                {/* Client Portal Route */}
+                <Route path="/portal" element={<ClientPortalPage />} />
 
-            {/* Role-Based Admin Panel Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="leads" element={<AdminLeadsPage />} />
-              <Route path="projects" element={<AdminProjectsPage />} />
-              <Route path="tickets" element={<AdminTicketsPage />} />
-              <Route path="finance" element={<AdminFinancePage />} />
-              <Route path="team" element={<AdminTeamPage />} />
-              <Route path="whatsapp" element={<AdminWhatsAppPage />} />
-            </Route>
+                {/* Role-Based Admin Panel Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="leads" element={<AdminLeadsPage />} />
+                  <Route path="projects" element={<AdminProjectsPage />} />
+                  <Route path="tickets" element={<AdminTicketsPage />} />
+                  <Route path="finance" element={<AdminFinancePage />} />
+                  <Route path="team" element={<AdminTeamPage />} />
+                  <Route path="whatsapp" element={<AdminWhatsAppPage />} />
+                </Route>
+              </Route>
 
-            {/* Fallback to Home */}
-            <Route
-              path="*"
-              element={
-                <HomePage
-                  onOpenEnquire={(svc) => handleOpenEnquire(svc)}
-                  onOpenAudit={() => setAuditOpen(true)}
-                />
-              }
-            />
-          </Routes>
+              {/* Fallback to Home */}
+              <Route
+                path="*"
+                element={
+                  <HomePage
+                    onOpenEnquire={(svc) => handleOpenEnquire(svc)}
+                    onOpenAudit={() => setAuditOpen(true)}
+                  />
+                }
+              />
+            </Routes>
+          </Suspense>
         </main>
 
         {/* Public Footer & Floating Widgets */}

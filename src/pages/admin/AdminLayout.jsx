@@ -17,16 +17,17 @@ import {
   Code2,
   Palette,
   Eye,
-  Globe
+  Globe,
+  LogOut
 } from 'lucide-react';
 
 export default function AdminLayout() {
-  const {
     currentRole,
     setCurrentRole,
     leads,
     tickets,
-    resetToDefaults
+    resetToDefaults,
+    logout
   } = useApp();
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -177,9 +178,18 @@ export default function AdminLayout() {
             <button
               onClick={resetToDefaults}
               title="Reset state to initial realistic demo data"
-              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-900 transition-colors"
+              className="hidden lg:block p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-900 transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={logout}
+              title="Logout"
+              className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-slate-900 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
             </button>
 
             {/* Mobile Hamburger Button */}
@@ -332,6 +342,15 @@ export default function AdminLayout() {
                 >
                   Return to Public Website
                 </Link>
+                <button
+                  onClick={() => {
+                    setMobileNavOpen(false);
+                    logout();
+                  }}
+                  className="w-full text-center py-2.5 rounded-xl bg-red-50 text-red-600 font-bold text-xs"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </div>
